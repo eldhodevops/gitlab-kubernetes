@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-home-claim
+  labels:
+    app: gitlab-home
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gitlab-home
+  resources:
+    requests:
+      storage: 10Gi

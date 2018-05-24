@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: gitlab-data-pv
+  labels:
+    type: gitlab-data
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gitlab-data
+  hostPath:
+   path: /home/volumes/gitlab/data

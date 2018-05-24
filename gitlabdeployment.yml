@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab
+  labels:
+    app: gitlab
+spec:
+  type: NodePort
+  ports:
+  - port: 84
+    targetPort: 80
+    protocol: TCP
+    nodePort: 32252
+  selector:
+    app: gitlab
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: gitlab
+spec:
+  selector:
+    matchLabels:
+      app: gitlab
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      nodeSelector:
+        nestgit: gitlabtt
+      containers:
+      - image: eldhodoc/gitlab:latest
+        name: gitlab
+        ports:
+        - containerPort: 80
+          name: gitlab
+        volumeMounts:
+        - name: git-home-storage
+          mountPath: /etc/gitlab
+        - name: git-log-storage
+          mountPath: /var/log/gitlab
+        - name: git-data-storage
+          mountPath: /var/opt/gitlab
+      volumes:
+      - name: git-home-storage
+        persistentVolumeClaim:
+          claimName: gitlab-home-claim
+      - name: git-log-storage
+        persistentVolumeClaim:
+          claimName: gitlab-log-claim
+      - name: git-data-storage
+        persistentVolumeClaim:
+          claimName: gitlab-data-claim
+        
